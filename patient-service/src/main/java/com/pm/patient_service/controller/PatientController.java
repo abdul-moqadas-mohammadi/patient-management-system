@@ -8,6 +8,8 @@ import com.pm.patient_service.dto.PatientResponseDto;
 import com.pm.patient_service.service.PatientService;
 import com.pm.patient_service.validators.CreatePatientValidationGroup;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.groups.Default;
 
 import java.util.List;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/patients")
+@Tag(name = "Patient", description = "APIs for managing patients")
 public class PatientController {
 
     private final PatientService patientService;
@@ -34,6 +37,7 @@ public class PatientController {
     }
 
     @GetMapping
+    @Operation(summary = "Get all patients")
     public ResponseEntity<List<PatientResponseDto>> getPatients() {
         List<PatientResponseDto> patients = patientService.getPatients();
         System.out.println(patients);
@@ -43,6 +47,7 @@ public class PatientController {
 
 
     @PostMapping
+    @Operation(summary = "Create a new patient")
     public ResponseEntity<PatientResponseDto> createPatient(@Validated({Default.class,CreatePatientValidationGroup.class})
      @RequestBody PatientRequestDto patientRequestDto){
        PatientResponseDto patient = patientService.createPatient(patientRequestDto);
@@ -51,6 +56,7 @@ public class PatientController {
     }
 
     @PutMapping("/{id}")
+    @Operation(summary = "Update an existing patient")
     public ResponseEntity<PatientResponseDto> updatePatient(@PathVariable UUID id, @Validated({Default.class})
      @RequestBody PatientRequestDto patientRequestDto){
         PatientResponseDto updatedPatient = patientService.updatePatient(id, patientRequestDto);
@@ -58,6 +64,7 @@ public class PatientController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Delete a patient")
     public ResponseEntity<Void> deletePatient(@PathVariable UUID id){
         patientService.deletePatient(id);
         return ResponseEntity.noContent().build();
