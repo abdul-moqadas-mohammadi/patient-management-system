@@ -1,0 +1,15 @@
+FROM maven:3.9.6-eclipse-temurin-21
+
+WORKDIR /app
+
+# Only copy pom.xml to cache dependencies
+COPY pom.xml .
+
+RUN mvn dependency:go-offline
+
+EXPOSE 4000
+
+ENV SPRING_DEVTOOLS_RESTART_ENABLED=true
+ENV MAVEN_OPTS="-Dspring.devtools.restart.poll-interval=1s -Dspring.devtools.restart.quiet-period=500ms"
+
+CMD mvn -Dspring-boot.run.fork=false spring-boot:run
